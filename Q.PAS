@@ -5,6 +5,7 @@ birdY:integer;
 birdXVel:integer;
 birdYVel:real;
 keyalready:boolean;
+keychar:char;
 const birdYAcc:real = 0.4;
 
 procedure DrawBird;
@@ -20,6 +21,16 @@ begin
      end;
 end;
 
+procedure DrawPipes;
+var p:Integer;
+x:Integer;
+y:Integer;
+begin
+     for p := 0 to 3 do
+     begin
+     end;
+end;
+
 begin
      birdX := 100;
      birdY := 100;
@@ -27,18 +38,18 @@ begin
      birdYVel := 0;
      keyalready := False;
      HiRes;
-     for loop := 0 to 100 do
+     for loop := 0 to 1000 do
      begin
          HiRes;
          DrawBird;
          birdYVel := birdYVel + birdYAcc;
          birdY := Trunc(birdY + birdYVel);
-         if KeyPressed and (not keyalready) then
+         if KeyPressed then
          begin
               birdYVel := -10.0;
-              keyalready := True;
+              Read(Kbd, keychar);
          end;
-         Delay(32);
+         Delay(16);
      end;
      Delay(1000);
      TextMode;
