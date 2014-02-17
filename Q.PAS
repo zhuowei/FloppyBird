@@ -9,15 +9,18 @@ keychar:char;
 gamerunning:boolean;
 pipex:integer;
 pipey:integer;
+soundremaining:boolean;
 const birdYAcc:real = 0.8;
+birdWidth:integer = 10;
+birdHeight:integer = 8;
 
 procedure DrawBird;
 var x:Integer;
 y:Integer;
 begin
-     for x := birdX to birdX + 10 do
+     for x := birdX to birdX + birdWidth do
      begin
-          for y := birdY to birdY + 10 do
+          for y := birdY to birdY + birdHeight do
           begin
                Plot(x, y, 1);
           end;
@@ -54,12 +57,12 @@ begin
      gamerunning := True;
      pipex := 300;
      pipey := 50;
+     soundremaining := False;
      HiRes;
      while gamerunning do
      begin
+         Randomize;
          HiRes;
-         DrawBird;
-         DrawPipes;
          birdYVel := birdYVel + birdYAcc;
          birdY := Trunc(birdY + birdYVel);
          if KeyPressed then
@@ -75,12 +78,33 @@ begin
              pipex := 300;
              pipey := pipey + random(40) - 20;
          end;
-         if birdY > 200 then
+         DrawBird;
+         DrawPipes;
+         if (birdY > 200) or ((birdx + birdWidth > pipex) and (birdx < pipex + 50)
+            and ((birdy + birdHeight >= pipey + 50) or (birdy < pipey)) ) then
          begin
-              gamerunning := False
+              gamerunning := False;
+         end;
+         if gamerunning and (birdx + birdwidth = pipex + 50) then
+         begin
+              sound(1760);
+              soundremaining := True;
+         end
+         else
+         begin
+              if soundremaining then
+              begin
+                 NoSound;
+                 soundremaining := False;
+              end;
          end;
          Delay(32);
      end;
-     Delay(1000);
+     for loop := 440 downto 220 do
+     begin
+          Sound(loop);
+          Delay(2);
+     end;
+     NoSound;
      TextMode;
 end.
